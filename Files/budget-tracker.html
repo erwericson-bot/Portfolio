@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; min-height: 100vh; padding: 40px 20px; }
+.container { max-width: 750px; margin: 0 auto; }
+h1 { font-size: 34px; text-align: center; margin-bottom: 25px; }
+h1 span { color: #ff004f; }
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+.summary-card { background: #212020; padding: 20px; border-radius: 10px; text-align: center; }
+.summary-card .amount { font-size: 24px; font-weight: 600; }
+.summary-card.income .amount { color: #4caf50; }
+.summary-card.expense .amount { color: #ff004f; }
+.summary-card.balance .amount { color: #fff; }
+.summary-card .label { font-size: 12px; color: #ababab; margin-top: 5px; }
+.add-form { display: grid; grid-template-columns: 2fr 1fr 1.2fr 1fr auto; gap: 10px; background: #212020; padding: 20px; border-radius: 10px; margin-bottom: 25px; }
+.add-form input, .add-form select { padding: 12px; background: #262626; border: 0; border-radius: 6px; color: #fff; font-size: 14px; width: 100%; }
+.add-form input:focus, .add-form select:focus { outline: 1px solid #ff004f; }
+.add-form button { padding: 12px 20px; background: #ff004f; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.categories { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+.cat-chip { background: #212020; padding: 10px 16px; border-radius: 20px; font-size: 13px; display: flex; gap: 8px; align-items: center; }
+.cat-chip .cat-amount { color: #ff004f; font-weight: 600; }
+.entry-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.entry { background: #212020; padding: 14px 18px; border-radius: 8px; display: flex; align-items: center; gap: 15px; }
+.entry-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.entry.income .entry-icon { background: rgba(76,175,80,0.15); color: #4caf50; }
+.entry.expense .entry-icon { background: rgba(255,0,79,0.15); color: #ff004f; }
+.entry-info { flex: 1; }
+.entry-title { font-size: 14px; font-weight: 500; }
+.entry-meta { font-size: 12px; color: #ababab; margin-top: 2px; }
+.entry-amount { font-size: 15px; font-weight: 600; }
+.entry.income .entry-amount { color: #4caf50; }
+.entry.expense .entry-amount { color: #ff004f; }
+.delete-btn { background: none; border: none; color: #ababab; cursor: pointer; }
+.delete-btn:hover { color: #ff004f; }
+.empty { text-align: center; padding: 30px; color: #ababab; }
+@media (max-width: 650px) {
+  .add-form { grid-template-columns: 1fr 1fr; }
+  .summary { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Budget <span>Tracker</span></h1>
+
+  <div class="summary">
+    <div class="summary-card income"><div class="amount" id="totalIncome">$0</div><div class="label">Income</div></div>
+    <div class="summary-card expense"><div class="amount" id="totalExpense">$0</div><div class="label">Expenses</div></div>
+    <div class="summary-card balance"><div class="amount" id="balance">$0</div><div class="label">Balance</div></div>
+  </div>
+
+  <div class="add-form">
+    <input type="text" id="descInput" placeholder="Description">
+    <input type="number" id="amountInput" placeholder="Amount" min="0" step="0.01">
+    <select id="categoryInput">
+      <option>Food</option><option>Transport</option><option>Housing</option>
+      <option>Utilities</option><option>Entertainment</option><option>Salary</option>
+      <option>Other</option>
+    </select>
+    <select id="typeInput">
+      <option value="expense">Expense</option>
+      <option value="income">Income</option>
+    </select>
+    <button onclick="addEntry()">Add</button>
+  </div>
+
+  <div class="categories" id="categoryBreakdown"></div>
+
+  <ul class="entry-list" id="entryList"></ul>
+</div>
+
+<script>
+let entries = JSON.parse(localStorage.getItem('budgetEntries') || '[]');
+
+function save() {
+  localStorage.setItem('budgetEntries', JSON.stringify(entries));
+}
+
+function addEntry() {
+  const desc = document.getElementById('descInput').value.trim();
+  const amount = parseFloat(document.getElementById('amountInput').value);
+  const category = document.getElementById('categoryInput').value;
+  const type = document.getElementById('typeInput').value;
+
+  if (!desc || !amount || amount <= 0) return;
+
+  entries.unshift({
+    id: Date.now(),
+    desc, amount, category, type,
+    date: new Date().toLocaleDateString()
+  });
+
+  document.getElementById('descInput').value = '';
+  document.getElementById('amountInput').value = '';
+  save();
+  render();
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  save();
+  render();
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function render() {
+  const income = entries.filter(e => e.type === 'income').reduce((s, e) => s + e.amount, 0);
+  const expense = entries.filter(e => e.type === 'expense').reduce((s, e) => s + e.amount, 0);
+
+  document.getElementById('totalIncome').textContent = '$' + income.toFixed(2);
+  document.getElementById('totalExpense').textContent = '$' + expense.toFixed(2);
+  document.getElementById('balance').textContent = '$' + (income - expense).toFixed(2);
+
+  // Category breakdown (expenses only)
+  const byCategory = {};
+  entries.filter(e => e.type === 'expense').forEach(e => {
+    byCategory[e.category] = (byCategory[e.category] || 0) + e.amount;
+  });
+
+  const catContainer = document.getElementById('categoryBreakdown');
+  const cats = Object.entries(byCategory);
+  catContainer.innerHTML = cats.length === 0
+    ? ''
+    : cats.map(([cat, amt]) => `
+        <div class="cat-chip">${cat}: <span class="cat-amount">$${amt.toFixed(2)}</span></div>
+      `).join('');
+
+  const list = document.getElementById('entryList');
+  if (entries.length === 0) {
+    list.innerHTML = '<li class="empty">No transactions yet. Add one above.</li>';
+    return;
+  }
+
+  list.innerHTML = entries.map(e => `
+    <li class="entry ${e.type}">
+      <div class="entry-icon"><i class="fa-solid ${e.type === 'income' ? 'fa-arrow-down' : 'fa-arrow-up'}"></i></div>
+      <div class="entry-info">
+        <div class="entry-title">${escapeHtml(e.desc)}</div>
+        <div class="entry-meta">${e.category} · ${e.date}</div>
+      </div>
+      <div class="entry-amount">${e.type === 'income' ? '+' : '-'}$${e.amount.toFixed(2)}</div>
+      <button class="delete-btn" onclick="deleteEntry(${e.id})"><i class="fa-solid fa-trash"></i></button>
+    </li>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Applications Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; min-height: 100vh; padding: 60px 20px; }
+.container { max-width: 1000px; margin: 0 auto; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; color: #ababab; text-decoration: none; font-size: 14px; margin-bottom: 30px; transition: 0.3s; }
+.back-link:hover { color: #ff004f; }
+h1 { font-size: 42px; margin-bottom: 10px; }
+h1 span { color: #ff004f; }
+.subtitle { color: #ababab; font-size: 16px; margin-bottom: 45px; max-width: 600px; }
+.app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+.app-card {
+  background: #212020; border-radius: 12px; padding: 35px 30px; text-decoration: none; color: #fff;
+  display: block; transition: transform 0.4s, background 0.4s;
+}
+.app-card:hover { transform: translateY(-8px); background: #262626; }
+.app-card i { font-size: 42px; color: #ff004f; margin-bottom: 20px; display: block; }
+.app-card h3 { font-size: 22px; margin-bottom: 12px; }
+.app-card p { font-size: 14px; color: #ababab; line-height: 1.6; margin-bottom: 20px; }
+.app-card .launch { font-size: 13px; color: #ff004f; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../index.html#portfolio" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+
+  <h1>Software <span>Applications Suite</span></h1>
+  <p class="subtitle">A collection of small full-stack and front-end applications built to practice core programming concepts: CRUD operations, API integration, state management, and real-time communication.</p>
+
+  <div class="app-grid">
+    <a href="task-manager.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-list-check"></i>
+      <h3>Task Manager App</h3>
+      <p>A to-do list with task creation, due dates, priority levels, and local data persistence.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+
+    <a href="calculator.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-calculator"></i>
+      <h3>Calculator App</h3>
+      <p>A responsive calculator supporting basic arithmetic and full keyboard input.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+
+    <a href="weather-dashboard.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-cloud-sun"></i>
+      <h3>Weather Dashboard</h3>
+      <p>Live forecasts by city, pulled from a public weather API in real time.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+
+    <a href="chat-app.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-comments"></i>
+      <h3>Chat Application</h3>
+      <p>Real-time messaging built with WebSockets. Requires the included Node.js server.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+
+    <a href="inventory-management.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-boxes-stacked"></i>
+      <h3>Inventory Management System</h3>
+      <p>A CRUD system for tracking stock levels, product entries, and low-stock alerts.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+
+    <a href="budget-tracker.html" class="app-card" target="_blank">
+      <i class="fa-solid fa-wallet"></i>
+      <h3>Budget Tracker</h3>
+      <p>Income and expense logging with category breakdowns and running balance.</p>
+      <div class="launch">Launch app <i class="fa-solid fa-arrow-right"></i></div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

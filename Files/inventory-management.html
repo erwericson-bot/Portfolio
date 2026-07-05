@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; min-height: 100vh; padding: 40px 20px; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 34px; margin-bottom: 25px; text-align: center; }
+h1 span { color: #ff004f; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+.summary-card { background: #212020; padding: 20px; border-radius: 10px; text-align: center; }
+.summary-card .num { font-size: 28px; font-weight: 600; color: #ff004f; }
+.summary-card .label { font-size: 12px; color: #ababab; margin-top: 5px; }
+.add-form { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 10px; background: #212020; padding: 20px; border-radius: 10px; margin-bottom: 25px; }
+.add-form input { padding: 12px; background: #262626; border: 0; border-radius: 6px; color: #fff; font-size: 14px; width: 100%; }
+.add-form input:focus { outline: 1px solid #ff004f; }
+.add-form button { padding: 12px 20px; background: #ff004f; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+table { width: 100%; border-collapse: collapse; background: #212020; border-radius: 10px; overflow: hidden; }
+th, td { padding: 14px 16px; text-align: left; font-size: 14px; }
+th { background: #080808; color: #ababab; font-weight: 500; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+tr:not(:last-child) td { border-bottom: 1px solid #2a2a2a; }
+.stock-low { color: #ff004f; font-weight: 600; }
+.stock-ok { color: #4caf50; font-weight: 600; }
+.qty-controls { display: flex; align-items: center; gap: 8px; }
+.qty-controls button { width: 26px; height: 26px; border-radius: 50%; border: none; background: #333; color: #fff; cursor: pointer; }
+.qty-controls button:hover { background: #ff004f; }
+.delete-btn { background: none; border: none; color: #ababab; cursor: pointer; font-size: 15px; }
+.delete-btn:hover { color: #ff004f; }
+.empty { text-align: center; padding: 40px; color: #ababab; }
+@media (max-width: 700px) {
+  .add-form { grid-template-columns: 1fr 1fr; }
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Inventory <span>Management</span></h1>
+
+  <div class="summary">
+    <div class="summary-card"><div class="num" id="totalItems">0</div><div class="label">Total Items</div></div>
+    <div class="summary-card"><div class="num" id="totalStock">0</div><div class="label">Units in Stock</div></div>
+    <div class="summary-card"><div class="num" id="lowStockCount">0</div><div class="label">Low Stock Alerts</div></div>
+    <div class="summary-card"><div class="num" id="totalValue">$0</div><div class="label">Inventory Value</div></div>
+  </div>
+
+  <div class="add-form">
+    <input type="text" id="nameInput" placeholder="Product name">
+    <input type="number" id="qtyInput" placeholder="Qty" min="0">
+    <input type="number" id="priceInput" placeholder="Unit price" min="0" step="0.01">
+    <input type="number" id="thresholdInput" placeholder="Low stock at" min="0" value="5">
+    <button onclick="addItem()">Add Item</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th><th>Quantity</th><th>Unit Price</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="inventoryBody"></tbody>
+  </table>
+</div>
+
+<script>
+let items = JSON.parse(localStorage.getItem('inventory') || '[]');
+
+function save() {
+  localStorage.setItem('inventory', JSON.stringify(items));
+}
+
+function addItem() {
+  const name = document.getElementById('nameInput').value.trim();
+  const qty = parseInt(document.getElementById('qtyInput').value) || 0;
+  const price = parseFloat(document.getElementById('priceInput').value) || 0;
+  const threshold = parseInt(document.getElementById('thresholdInput').value) || 5;
+
+  if (!name) return;
+
+  items.push({ id: Date.now(), name, qty, price, threshold });
+  document.getElementById('nameInput').value = '';
+  document.getElementById('qtyInput').value = '';
+  document.getElementById('priceInput').value = '';
+  document.getElementById('thresholdInput').value = '5';
+  save();
+  render();
+}
+
+function changeQty(id, delta) {
+  const item = items.find(i => i.id === id);
+  if (item) item.qty = Math.max(0, item.qty + delta);
+  save();
+  render();
+}
+
+function deleteItem(id) {
+  items = items.filter(i => i.id !== id);
+  save();
+  render();
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function render() {
+  const body = document.getElementById('inventoryBody');
+
+  if (items.length === 0) {
+    body.innerHTML = '<tr><td colspan="5" class="empty">No inventory items yet. Add one above.</td></tr>';
+  } else {
+    body.innerHTML = items.map(item => {
+      const low = item.qty <= item.threshold;
+      return `
+        <tr>
+          <td>${escapeHtml(item.name)}</td>
+          <td>
+            <div class="qty-controls">
+              <button onclick="changeQty(${item.id}, -1)">−</button>
+              <span>${item.qty}</span>
+              <button onclick="changeQty(${item.id}, 1)">+</button>
+            </div>
+          </td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td class="${low ? 'stock-low' : 'stock-ok'}">${low ? 'Low Stock' : 'In Stock'}</td>
+          <td><button class="delete-btn" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('totalItems').textContent = items.length;
+  document.getElementById('totalStock').textContent = items.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('lowStockCount').textContent = items.filter(i => i.qty <= i.threshold).length;
+  document.getElementById('totalValue').textContent = '$' + items.reduce((s, i) => s + i.qty * i.price, 0).toFixed(2);
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+</head>
+ 
+<body>
+ 
+    <div id= "header">
+        <div class="container">
+            <nav>
+                <img src="Images/image (1).png" class="logo" alt="Logo">
+                <i class="fa-solid fa-bars" id="menu-icon" onclick="toggleMenu()"></i>
+                <ul id="nav-links">
+                    <li><a href="#home" onclick="closeMenu()">Home</a></li>
+                    <li><a href="#about" onclick="closeMenu()">About</a></li>
+                    <li><a href="#services" onclick="closeMenu()">Services</a></li>
+                    <li><a href="#portfolio" onclick="closeMenu()">Portfolio</a></li>
+                    <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-text">
+                <p>Web Developer/ Software programmer/Customer Support Agent</p>
+                <h1>Hello, I'm <span>Erwen</span> <br> from Philippines <br></h1>
+            </div>
+        </div>
+    </div>
+    <!-- About Section -->
+    <div id="about">
+    <div class="container">
+        <div class="row">
+            <div class="about-col-1">
+                 <img src="Images/image2.png" alt="">
+            </div>
+            <div class="about-col-2">
+                <h1 class="sub-title">About Me</h1>          
+                <p>My name is Erwen, I am a web developer and software programmer.
+                   I have experience in creating websites and applications using various 
+                   programming languages and frameworks. I am passionate about technology
+                   and always eager to learn new skills to improve my craft.
+                </p>
+                <div class="tab-titles">
+                    <p class="tab-links active-link" onclick="opentab(event,'skills')">Skills</p>
+                    <p class="tab-links" onclick="opentab(event,'experience')">Experience</p>
+                    <p class="tab-links" onclick="opentab(event,'education')">Education</p>
+                </div>
+                <div class="tab-contents active-tab" id="skills">
+                    <ul class="active-tab">
+                        <li><span>Web Development</span><br> Creating and Designing Websites</li>
+                        <li><span>Customer Support</span><br> Providing assistance and solutions to customers</li>
+                        <li><span>Software Programming</span><br> Developing and Maintaining Software Applications</li>
+                        <li><span>Sales agent</span><br> Proficient in sales techniques and customer relationship management</li>
+                        <li><span>Financial Analyst</span><br> Creating financial reports and analyzing data</li>                       
+                    </ul>
+                </div>
+ 
+                  <div class="tab-contents" id="experience">
+                    <ul class="active-tab">
+                        <li><span>Customer Support Agent</span><br> Customer Support Agent at Teleperformance(Vivint) which carrries multiple responsibilities
+                        as a Financial Analyst which help customers understand their financial situations inlcuding rectification of financial errors,
+                        Sales agent which help customers understand the products and services offered by the company and assist them in making informed 
+                        purchasing decisions, and as a Customer Support Agent which provide assistance and solutions to customers regarding their inquiries, 
+                        concerns, and issues related to the company's products or services.
+                        </li>
+                    </ul>
+                </div>
+ 
+                  <div class="tab-contents" id="education">
+                    <ul class="active-tab">
+                        <li><span>2018-2025</span><br> STEM student at (DRESSMNHS) Don Ruben Edera Ecleo Senior<br>Memorial National High School</li>
+                        <li><span>2025-2026</span><br> Computer Science Undergraduate at (UCLM)University of Cebu Lapu-lapu Mandue</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Services Section -->
+    <div id="services">
+        <div class="container">
+            <h1 class="sub-title">My Services</h1>
+            <div class="services-list">
+                <div class="services-col">
+                    <i class="fa-solid fa-code"></i>
+                    <h3>Web Development</h3>
+                    <p>Creating and designing websites using various programming languages and frameworks.</p>
+                    <a href="#">Learn more</a>
+                </div>
+                <div class="services-col">
+                    <i class="fa-solid fa-crop"></i>
+                    <h3>Software Programming</h3>
+                    <p>Developing and maintaining software applications for various platforms.</p>
+                    <a href="#">Learn more</a>
+                </div>
+                <div class="services-col">
+                    <i class="fa-solid fa-headset"></i>
+                    <h3>Customer Support</h3>
+                    <p>Providing assistance and solutions to customers regarding their inquiries, concerns, and issues related to the company's products or services.</p>
+                    <a href="#">Learn more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+<!-----------Portfolio Section----------->
+ 
+<div id="portfolio">
+    <div class="container">
+        <h1 class="sub-title">My Work</h1>
+        <div class="work-list">
+            <div class="work">
+                <img src="Images/typing.png" alt="Software Applications Suite">
+                <div class="layer">
+                    <h3>Software Applications Suite</h3>
+                    <p>6 school projects built to practice core programming concepts: task manager, calculator, weather dashboard, chat app, inventory system, and budget tracker.</p>
+                    <a href="Files/apps-hub.html" target="_blank"><i class="fa-solid fa-link"></i></a>
+                </div>
+            </div>
+            <div class="work">
+                <img src="Images/programming.png" alt="Work 3">
+                <div class="layer">
+                    <h3>Java &amp; C Console Programs</h3>
+                    <p>4 standalone console programs (Library System, Grade Calculator, Bank Simulator, Matrix Calculator) written in Java and C.</p>
+                    <a href="Files/programs-hub.html" target="_blank"><i class="fa-solid fa-link"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Experience -->
+        <h1 class="sub-title work2-title">Work Experience</h1>
+        <div class="work2-gallery">
+            <div class="work2-img">
+                <img src="Images/work (1).jpg" alt="Work Experience Photo 1">
+            </div>
+            <div class="work2-img">
+                <img src="Images/work (2).jpg" alt="Work Experience Photo 2">
+            </div>
+            <div class="work2-img">
+                <img src="Images/work (3).jpg" alt="Work Experience Photo 3">
+            </div>
+        </div>
+        <div class="work2-description">
+            <p>Customer Support Agent at Teleperformance (Vivint), handling multiple roles including Financial Analyst, Sales Agent, and Customer Support Agent responsibilities — helping customers understand their financial situations, guiding purchasing decisions, and resolving inquiries and issues related to the company's products or services.</p>
+            <a href="https://www.teleperformance.com" target="_blank" class="btn btn2 work2-link">Visit Company Website</a>
+        </div>
+
+        <a href="#" class="btn" id="seeMoreBtn" onclick="openAllWorkLinks(event)">See More</a>
+    </div>    
+    </div>    
+</div>
+<!-- Contact Section -->
+<div id="contact">
+    <div class="container">
+        <div class="row ">
+            <div class="contact-left">
+                 <h1 class="sub-title">Contact Me</h1>
+                 <p><i class="fa-solid fa-paper-plane"></i>erwericson@gmail.com</p>
+                 <p><i class="fa-solid fa-phone"></i>+63 985 5240 520</p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.linkedin.com"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://onlinejobs.ph"><i class="fa-solid fa-briefcase"></i></a>
+                </div>
+                <a href="Files/Erwericson_Bueno_Resume.pdf" download class="btn btn2">Download CV</a>
+            </div>
+            <div class="contact-right">
+                <form id="contactForm" onsubmit="sendMessage(event)">
+                    <input type="text" id="nameInput" placeholder="Your Name" required>
+                    <input type="email" id="emailInput" placeholder="Your Email" required>
+                    <textarea name="Message" id="messageInput" rows="6" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<script>
+    var tablinks = document.getElementsByClassName("tab-links");    
+    var tabcontents = document.getElementsByClassName("tab-contents");      
+    function opentab(evt, tabname){
+        for(tablink of tablinks){
+            tablink.classList.remove("active-link");
+        }
+        for(tabcontent of tabcontents){
+            tabcontent.classList.remove("active-tab");
+        }
+        evt.currentTarget.classList.add("active-link");
+        document.getElementById(tabname).classList.add("active-tab");
+    }
+
+    function toggleMenu(){
+        document.getElementById("nav-links").classList.toggle("show-menu");
+    }
+    function closeMenu(){
+        document.getElementById("nav-links").classList.remove("show-menu");
+    }
+
+    function openAllWorkLinks(e){
+        e.preventDefault();
+        var portfolioSection = document.getElementById("portfolio");
+        var links = portfolioSection.querySelectorAll("a[target='_blank']");
+        var opened = 0;
+        links.forEach(function(link){
+            if (link.id !== "seeMoreBtn") {
+                window.open(link.href, "_blank");
+                opened++;
+            }
+        });
+        if (opened === 0) {
+            alert("No work links available yet.");
+        }
+    }
+
+    function sendMessage(e){
+        e.preventDefault();
+
+        var name = document.getElementById("nameInput").value.trim();
+        var email = document.getElementById("emailInput").value.trim();
+        var message = document.getElementById("messageInput").value.trim();
+
+        if (!name || !email || !message) {
+            alert("Please fill in all fields before sending.");
+            return;
+        }
+
+        // Paste your Google Apps Script Web App URL here (ends in /exec)
+        var scriptURL = "https://script.google.com/macros/s/AKfycbxCSpBas9fcqXnSxmWo9HT3ywHuAf2uGKGMbVqmKF0mZWSBGJ44vX6RrBAgC44qLoSp7A/exec"; // Replace with your actual script URL
+        var submitBtn = document.querySelector("#contactForm button[type='submit']");
+        var originalText = submitBtn.textContent;
+        submitBtn.textContent = "Sending...";
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({ name: name, email: email, message: message })
+        })
+        .then(function(response){ return response.json(); })
+        .then(function(data){
+            if (data.result === "success") {
+                alert("Message sent successfully! I'll get back to you soon.");
+                document.getElementById("contactForm").reset();
+            } else {
+                alert("Something went wrong: " + (data.message || "please try again."));
+            }
+        })
+        .catch(function(error){
+            console.error(error);
+            alert("Something went wrong. Please try again later.");
+        })
+        .finally(function(){
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    }
+</script>
+ 
+</body>
+ 
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; }
+.chat-app { width: 100%; max-width: 480px; height: 90vh; max-height: 700px; background: #212020; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
+.chat-header { padding: 18px 22px; background: #080808; display: flex; align-items: center; justify-content: space-between; }
+.chat-header h2 { font-size: 18px; }
+.chat-header h2 span { color: #ff004f; }
+.status-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #ababab; }
+.status-dot .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4444; }
+.status-dot.connected .dot { background: #4caf50; }
+.join-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 30px; }
+.join-screen input { width: 100%; padding: 14px; background: #262626; border: 0; border-radius: 6px; color: #fff; font-size: 15px; }
+.join-screen button { width: 100%; padding: 14px; background: #ff004f; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.messages { flex: 1; overflow-y: auto; padding: 20px; display: none; flex-direction: column; gap: 10px; }
+.messages.show { display: flex; }
+.msg { max-width: 75%; padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.4; }
+.msg.mine { align-self: flex-end; background: #ff004f; }
+.msg.theirs { align-self: flex-start; background: #333; }
+.msg.system { align-self: center; background: transparent; color: #ababab; font-size: 12px; font-style: italic; }
+.msg .sender { font-size: 11px; opacity: 0.7; margin-bottom: 3px; display: block; }
+.chat-input { display: none; padding: 15px; gap: 10px; background: #080808; }
+.chat-input.show { display: flex; }
+.chat-input input { flex: 1; padding: 12px 16px; background: #262626; border: 0; border-radius: 20px; color: #fff; font-size: 14px; }
+.chat-input button { width: 44px; height: 44px; border-radius: 50%; background: #ff004f; border: none; color: #fff; cursor: pointer; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="chat-app">
+  <div class="chat-header">
+    <h2>Live <span>Chat</span></h2>
+    <div class="status-dot" id="statusDot"><div class="dot"></div><span id="statusText">Offline</span></div>
+  </div>
+
+  <div class="join-screen" id="joinScreen">
+    <input type="text" id="usernameInput" placeholder="Enter your name">
+    <input type="text" id="serverInput" placeholder="ws://localhost:8080" value="ws://localhost:8080">
+    <button onclick="connect()">Join Chat</button>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="chat-input" id="chatInput">
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<script>
+let socket = null;
+let username = '';
+
+function connect() {
+  username = document.getElementById('usernameInput').value.trim();
+  const serverUrl = document.getElementById('serverInput').value.trim();
+  if (!username || !serverUrl) return;
+
+  socket = new WebSocket(serverUrl);
+
+  socket.onopen = () => {
+    document.getElementById('statusDot').classList.add('connected');
+    document.getElementById('statusText').textContent = 'Online';
+    document.getElementById('joinScreen').style.display = 'none';
+    document.getElementById('messages').classList.add('show');
+    document.getElementById('chatInput').classList.add('show');
+    socket.send(JSON.stringify({ type: 'join', username }));
+  };
+
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    addMessage(data);
+  };
+
+  socket.onclose = () => {
+    document.getElementById('statusDot').classList.remove('connected');
+    document.getElementById('statusText').textContent = 'Offline';
+    addMessage({ type: 'system', text: 'Disconnected from server.' });
+  };
+
+  socket.onerror = () => {
+    addMessage({ type: 'system', text: 'Could not connect. Is the chat server running?' });
+  };
+}
+
+function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if (!text || !socket || socket.readyState !== WebSocket.OPEN) return;
+
+  socket.send(JSON.stringify({ type: 'message', username, text }));
+  input.value = '';
+}
+
+function addMessage(data) {
+  const messages = document.getElementById('messages');
+  const div = document.createElement('div');
+
+  if (data.type === 'system') {
+    div.className = 'msg system';
+    div.textContent = data.text;
+  } else {
+    const mine = data.username === username;
+    div.className = `msg ${mine ? 'mine' : 'theirs'}`;
+    div.innerHTML = mine ? '' : `<span class="sender">${escapeHtml(data.username)}</span>`;
+    div.innerHTML += escapeHtml(data.text);
+  }
+
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+document.getElementById('messageInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+</script>
+</body>
+</html>

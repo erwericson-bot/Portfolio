@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java &amp; C Console Programs</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; min-height: 100vh; padding: 60px 20px; }
+.container { max-width: 1000px; margin: 0 auto; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; color: #ababab; text-decoration: none; font-size: 14px; margin-bottom: 30px; transition: 0.3s; }
+.back-link:hover { color: #ff004f; }
+h1 { font-size: 42px; margin-bottom: 10px; }
+h1 span { color: #ff004f; }
+.subtitle { color: #ababab; font-size: 16px; margin-bottom: 45px; max-width: 650px; line-height: 1.6; }
+.program-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+.program-card { background: #212020; border-radius: 12px; padding: 35px 30px; transition: transform 0.4s, background 0.4s; }
+.program-card:hover { transform: translateY(-8px); background: #262626; }
+.lang-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; padding: 4px 12px; border-radius: 20px; margin-bottom: 18px; }
+.lang-tag.java { background: rgba(255,0,79,0.15); color: #ff004f; }
+.lang-tag.c { background: rgba(76,175,80,0.15); color: #4caf50; }
+.program-card h3 { font-size: 22px; margin-bottom: 12px; }
+.program-card p { font-size: 14px; color: #ababab; line-height: 1.6; margin-bottom: 15px; }
+.program-card .compile-info { font-size: 12px; color: #6b6b6b; font-family: monospace; margin-bottom: 20px; }
+.download-btn { font-size: 13px; color: #fff; background: #ff004f; padding: 10px 20px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
+.download-btn:hover { background: #d10040; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../index.html#portfolio" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Portfolio</a>
+
+  <h1>Java &amp; C <span>Console Programs</span></h1>
+  <p class="subtitle">A set of standalone console applications, split between Java and C, each solving a different practical problem — from data persistence to numerical computation. These are source files meant to be compiled and run locally, not browser-based apps.</p>
+
+  <div class="program-grid">
+    <div class="program-card">
+      <span class="lang-tag java">JAVA</span>
+      <h3>Library Management System</h3>
+      <p>Console CRUD app for managing a library's book inventory — add, search, issue, return, and delete books, with file-based persistence.</p>
+      <div class="compile-info">javac LibraryManagementSystem.java<br>java LibraryManagementSystem</div>
+      <a href="LibraryManagementSystem.java" download class="download-btn"><i class="fa-solid fa-download"></i> Download .java</a>
+    </div>
+
+    <div class="program-card">
+      <span class="lang-tag c">C</span>
+      <h3>Student Grade Calculator</h3>
+      <p>Computes per-subject scores, letter grades, and overall GPA for a student across multiple subjects.</p>
+      <div class="compile-info">gcc GradeCalculator.c -o GradeCalculator<br>./GradeCalculator</div>
+      <a href="GradeCalculator.c" download class="download-btn"><i class="fa-solid fa-download"></i> Download .c</a>
+    </div>
+
+    <div class="program-card">
+      <span class="lang-tag java">JAVA</span>
+      <h3>Bank Account Simulator</h3>
+      <p>Simulates deposits, withdrawals, and balance checks with a persistent transaction history log.</p>
+      <div class="compile-info">javac BankAccountSimulator.java<br>java BankAccountSimulator</div>
+      <a href="BankAccountSimulator.java" download class="download-btn"><i class="fa-solid fa-download"></i> Download .java</a>
+    </div>
+
+    <div class="program-card">
+      <span class="lang-tag c">C</span>
+      <h3>Matrix Operations Calculator</h3>
+      <p>Menu-driven tool for matrix addition, multiplication, and transpose on user-defined matrices.</p>
+      <div class="compile-info">gcc MatrixOperations.c -o MatrixOperations<br>./MatrixOperations</div>
+      <a href="MatrixOperations.c" download class="download-btn"><i class="fa-solid fa-download"></i> Download .c</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

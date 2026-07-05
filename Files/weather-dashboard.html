@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5db04bc99e.js" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #080808; color: #fff; min-height: 100vh; padding: 40px 20px; }
+.container { max-width: 600px; margin: 0 auto; }
+h1 { font-size: 34px; text-align: center; margin-bottom: 25px; }
+h1 span { color: #ff004f; }
+.search-box { display: flex; gap: 10px; margin-bottom: 30px; }
+.search-box input {
+  flex: 1; padding: 14px; background: #262626; border: 0; border-radius: 6px; color: #fff; font-size: 15px;
+}
+.search-box input:focus { outline: 1px solid #ff004f; }
+.search-box button {
+  padding: 14px 24px; background: #ff004f; color: #fff; border: none; border-radius: 6px;
+  cursor: pointer; font-weight: 500; transition: 0.3s;
+}
+.search-box button:hover { background: #d10040; }
+.status { text-align: center; color: #ababab; margin-bottom: 20px; min-height: 20px; }
+.weather-card {
+  background: #212020; border-radius: 14px; padding: 35px; text-align: center; display: none;
+}
+.weather-card.show { display: block; }
+.location { font-size: 20px; color: #ababab; margin-bottom: 10px; }
+.temp { font-size: 64px; font-weight: 600; color: #ff004f; }
+.condition { font-size: 18px; margin: 10px 0 25px; }
+.weather-icon { font-size: 50px; margin-bottom: 15px; color: #ff004f; }
+.details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+.detail-item { background: #080808; border-radius: 8px; padding: 15px 10px; }
+.detail-item .label { font-size: 12px; color: #ababab; margin-bottom: 6px; }
+.detail-item .value { font-size: 18px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Weather <span>Dashboard</span></h1>
+
+  <div class="search-box">
+    <input type="text" id="cityInput" placeholder="Enter a city name...">
+    <button onclick="getWeather()">Search</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="weather-card" id="weatherCard">
+    <div class="weather-icon" id="weatherIcon"><i class="fa-solid fa-cloud-sun"></i></div>
+    <div class="location" id="locationName">--</div>
+    <div class="temp" id="tempValue">--°</div>
+    <div class="condition" id="conditionText">--</div>
+    <div class="details">
+      <div class="detail-item">
+        <div class="label">Feels Like</div>
+        <div class="value" id="feelsLike">--°</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Wind</div>
+        <div class="value" id="windSpeed">-- km/h</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Humidity</div>
+        <div class="value" id="humidity">--%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const weatherCodes = {
+  0: ['Clear sky', 'fa-sun'], 1: ['Mainly clear', 'fa-sun'], 2: ['Partly cloudy', 'fa-cloud-sun'],
+  3: ['Overcast', 'fa-cloud'], 45: ['Fog', 'fa-smog'], 48: ['Fog', 'fa-smog'],
+  51: ['Light drizzle', 'fa-cloud-rain'], 53: ['Drizzle', 'fa-cloud-rain'], 55: ['Heavy drizzle', 'fa-cloud-rain'],
+  61: ['Light rain', 'fa-cloud-showers-heavy'], 63: ['Rain', 'fa-cloud-showers-heavy'], 65: ['Heavy rain', 'fa-cloud-showers-heavy'],
+  71: ['Light snow', 'fa-snowflake'], 73: ['Snow', 'fa-snowflake'], 75: ['Heavy snow', 'fa-snowflake'],
+  80: ['Rain showers', 'fa-cloud-showers-heavy'], 95: ['Thunderstorm', 'fa-cloud-bolt'],
+  96: ['Thunderstorm w/ hail', 'fa-cloud-bolt'], 99: ['Thunderstorm w/ hail', 'fa-cloud-bolt']
+};
+
+async function getWeather() {
+  const city = document.getElementById('cityInput').value.trim();
+  const status = document.getElementById('status');
+  const card = document.getElementById('weatherCard');
+
+  if (!city) {
+    status.textContent = 'Please enter a city name.';
+    return;
+  }
+
+  status.textContent = 'Searching...';
+  card.classList.remove('show');
+
+  try {
+    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+    const geoData = await geoRes.json();
+
+    if (!geoData.results || geoData.results.length === 0) {
+      status.textContent = `No results found for "${city}".`;
+      return;
+    }
+
+    const { latitude, longitude, name, country } = geoData.results[0];
+
+    const weatherRes = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m`
+    );
+    const weatherData = await weatherRes.json();
+    const cur = weatherData.current;
+
+    const [condText, iconClass] = weatherCodes[cur.weather_code] || ['Unknown', 'fa-cloud'];
+
+    document.getElementById('locationName').textContent = `${name}, ${country}`;
+    document.getElementById('tempValue').textContent = `${Math.round(cur.temperature_2m)}°C`;
+    document.getElementById('conditionText').textContent = condText;
+    document.getElementById('feelsLike').textContent = `${Math.round(cur.apparent_temperature)}°C`;
+    document.getElementById('windSpeed').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
+    document.getElementById('humidity').textContent = `${cur.relative_humidity_2m}%`;
+    document.getElementById('weatherIcon').innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+
+    status.textContent = '';
+    card.classList.add('show');
+  } catch (err) {
+    status.textContent = 'Something went wrong. Please try again.';
+    console.error(err);
+  }
+}
+
+document.getElementById('cityInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') getWeather();
+});
+</script>
+</body>
+</html>
